@@ -2,40 +2,28 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import * as User from '../models';
 import { getPostData } from '../utils';
-import { STATUS } from '../constants';
+import { STATUS, TUser } from '../types';
+import { sendResponse } from '../helpers';
 
 //route GET /api/users
 export const getUsers = (response: ServerResponse) => {
   try {
     const users = User.findAll();
 
-    response.writeHead(STATUS.OK, {
-      'content-type': 'application/json',
-    });
-    response.end(JSON.stringify(users));
+    sendResponse(response, STATUS.OK, users);
   } catch (error) {
-    console.log(error);
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
 };
 
 //route GET /api/users/id
 export const getUser = (response: ServerResponse, id: string) => {
   try {
-    const user = User.findById(id);
+    const user = User.findById(id) as TUser;
 
-    if (!user) {
-      response.writeHead(STATUS.NOT_FOUND, {
-        'content-type': 'application/json',
-      });
-      response.end(JSON.stringify({ message: 'User Not Found' }));
-    } else {
-      response.writeHead(STATUS.OK, {
-        'content-type': 'application/json',
-      });
-      response.end(JSON.stringify(user));
-    }
+    sendResponse(response, STATUS.OK, user);
   } catch (error) {
-    console.log(error);
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
 };
 
@@ -45,10 +33,9 @@ export const createUser = async (request: IncomingMessage, response: ServerRespo
     const body = (await getPostData(request)) as any;
     const newUser = User.create(body);
 
-    response.writeHead(STATUS.CREATED, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify(newUser));
+    sendResponse(response, STATUS.CREATED, newUser);
   } catch (error) {
-    console.log(error);
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
 };
 
@@ -60,47 +47,29 @@ export const updateUser = async (
 ) => {
   try {
     const user = User.findById(id);
+    const { username, age, hobbies } = (await getPostData(request)) as any;
 
-    if (!user) {
-      response.writeHead(STATUS.NOT_FOUND, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ message: 'User Not Found' }));
-    } else {
-      const { username, age, hobbies } = (await getPostData(request)) as any;
+    const userData = {
+      username: username || user?.username,
+      age: age || user?.age,
+      hobbies: hobbies || user?.hobbies,
+    };
 
-      const userData = {
-        username: username || user?.username,
-        age: age || user?.age,
-        hobbies: hobbies || user?.hobbies,
-      };
+    const updateUser = User.update(id, userData);
 
-      const updateUser = User.update(id, userData);
-
-      response.writeHead(STATUS.OK, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify(updateUser));
-    }
+    sendResponse(response, STATUS.OK, updateUser);
   } catch (error) {
-    console.log(error);
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
 };
 
 //route DELETE /api/users/id
-export const deleteUser = (
-  response: ServerResponse,
-  id: string,
-) => {
+export const deleteUser = (response: ServerResponse, id: string) => {
   try {
-    const user = User.findById(id);
+    User.remove(id);
 
-    if (!user) {
-      response.writeHead(STATUS.NOT_FOUND, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ message: 'User Not Found' }));
-    } else {
-      User.remove(id);
-
-      response.writeHead(STATUS.NO_CONTENT, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ message: 'User deleted' }));
-    }
+    sendResponse(response, STATUS.NO_CONTENT, { message: 'User deleted' });
   } catch (error) {
-    console.log(error);
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
 };
