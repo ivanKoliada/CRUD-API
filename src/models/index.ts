@@ -1,6 +1,18 @@
-import { database } from "../database";
-import { TUser } from "../types";
+import { database } from '../database';
 
-export const findAll = () => database
+import { v4 as uuid } from 'uuid';
 
-export const findById = (id: string): TUser | undefined => database.find((item) => item.id === id)
+import { TUser, TUserBody } from '../types';
+
+export const findAll = () => database;
+
+export const findById = (id: string): TUser | undefined => database.find((item) => item.id === id);
+
+export const create = (user: TUserBody) => {
+  return new Promise((resolve) => {
+    const newUser = { id: uuid(), ...user };
+
+    database.push(newUser);
+    resolve(newUser);
+  });
+};

@@ -5,6 +5,8 @@ export type TUser = {
   hobbies: string[];
 };
 
+export type TUserBody = Omit<TUser, 'id'>;
+
 // export enum ESTATUS {
 //   OK = 200,
 //   CREATED= 201,

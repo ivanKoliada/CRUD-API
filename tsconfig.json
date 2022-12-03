@@ -9,7 +9,7 @@
     "rootDir": ".",
     "downlevelIteration": true,
     "strict": true,
-    "noImplicitAny": true,
+    // "noImplicitAny": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,

@@ -1,8 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import { v4 as uuid } from 'uuid';
 
 import * as User from '../models';
 import { STATUS } from '../constants';
-import { TUser } from '../types';
+import { TUser, TUserBody } from '../types';
+import { getPostData } from '../utils';
 
 //route GET /api/users
 export const getUsers = (request: IncomingMessage, response: ServerResponse) => {
@@ -42,9 +44,12 @@ export const getUser = (request: IncomingMessage, response: ServerResponse, id: 
 //route POST /api/users
 export const createUser = async (request: IncomingMessage, response: ServerResponse) => {
   try {
-    const user = 
+    const body = await getPostData(request) as any;
+    const newUser = await User.create(body);
 
-    
+    response.writeHead(STATUS.CREATED, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify(newUser)); 
+
   } catch (error) {
     console.log(error);
   }
