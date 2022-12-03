@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
 
-import { TUsers } from '../types';
+import { TUser } from '../types';
 
-export const database: TUsers[] = [
+export const database: TUser[] = [
   {
     id: uuid(),
     username: 'John',
