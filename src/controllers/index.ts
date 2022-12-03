@@ -44,12 +44,42 @@ export const getUser = (request: IncomingMessage, response: ServerResponse, id: 
 //route POST /api/users
 export const createUser = async (request: IncomingMessage, response: ServerResponse) => {
   try {
-    const body = await getPostData(request) as any;
-    const newUser = await User.create(body);
+    const body = (await getPostData(request)) as any;
+    const newUser = User.create(body);
 
     response.writeHead(STATUS.CREATED, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify(newUser)); 
+    response.end(JSON.stringify(newUser));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+//route PUT /api/users
+export const updateUser = async (
+  request: IncomingMessage,
+  response: ServerResponse,
+  id: string,
+) => {
+  try {
+    const user = User.findById(id);
+
+    if (!user) {
+      response.writeHead(STATUS.NOT_FOUND, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ message: 'User Not Found' }));
+    } else {
+      const { username, age, hobbies } = (await getPostData(request)) as any;
+
+      const userData = {
+        username: username || user?.username,
+        age: age || user?.age,
+        hobbies: hobbies || user?.hobbies,
+      };
+
+      const updateUser = User.update(id, userData);
+
+      response.writeHead(STATUS.OK, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify(updateUser));
+    }
   } catch (error) {
     console.log(error);
   }
