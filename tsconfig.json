@@ -1,8 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "ESNEXT",
-    "module": "ESNEXT",
+    "target": "ES2022",
+    "module": "CommonJS",
     "allowJs": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -17,5 +17,9 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "test", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": ["node_modules", "test", "**/*.spec.ts", "**/*.test.ts"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }

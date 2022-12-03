@@ -2,9 +2,12 @@
   "name": "simple-crud-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:prod": "webpack && node ./dist/bundle.js",
+    "start:dev": "nodemon ./src/index.ts",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
