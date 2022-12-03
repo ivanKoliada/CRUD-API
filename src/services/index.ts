@@ -1,11 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
+import { getUsers, getUser, createUser, updateUser, deleteUser } from '../controllers';
 import { ENDPOINT, METHODS, STATUS } from '../constants';
-import { getUsers, getUser, createUser, updateUser } from '../controllers';
 
 export const serviceController = async (request: IncomingMessage, response: ServerResponse) => {
   if (request.url === ENDPOINT && request.method === METHODS.GET) {
-    getUsers(request, response);
+    getUsers(response);
   } else if (
     request.url?.match(
       /\/api\/users\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
@@ -14,7 +14,7 @@ export const serviceController = async (request: IncomingMessage, response: Serv
   ) {
     const id = request.url.split('/')[3];
 
-    getUser(request, response, id);
+    getUser(response, id);
   } else if (request.url === ENDPOINT && request.method === METHODS.POST) {
     createUser(request, response);
   } else if (
@@ -26,6 +26,15 @@ export const serviceController = async (request: IncomingMessage, response: Serv
     const id = request.url.split('/')[3];
 
     updateUser(request, response, id);
+  } else if (
+    request.url?.match(
+      /\/api\/users\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    ) &&
+    request.method === METHODS.DELETE
+  ) {
+    const id = request.url.split('/')[3];
+
+    deleteUser( response, id);
   } else {
     response.writeHead(STATUS.BAD_REQUEST, {
       'content-type': 'application/json',

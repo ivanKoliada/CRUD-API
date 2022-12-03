@@ -4,6 +4,8 @@ dotenv.config();
 
 export const PORT = process.env.PORT || 8080;
 
+export const ENDPOINT = '/api/users';
+
 export const METHODS = {
   GET: 'GET',
   POST: 'POST',
@@ -19,5 +21,3 @@ export const STATUS = {
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
 };
-
-export const ENDPOINT = '/api/users';

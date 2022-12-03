@@ -1,9 +1,7 @@
-import http, {STATUS_CODES} from 'http';
-
-import { database } from './database';
+import http from 'http';
 
 import { PORT } from './constants';
-import { serviceController } from './services/indx';
+import { serviceController } from './services';
 
 export const init = () => {
   const server = http.createServer(serviceController);

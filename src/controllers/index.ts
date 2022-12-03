@@ -1,13 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { v4 as uuid } from 'uuid';
 
 import * as User from '../models';
-import { STATUS } from '../constants';
-import { TUser, TUserBody } from '../types';
 import { getPostData } from '../utils';
+import { STATUS } from '../constants';
 
 //route GET /api/users
-export const getUsers = (request: IncomingMessage, response: ServerResponse) => {
+export const getUsers = (response: ServerResponse) => {
   try {
     const users = User.findAll();
 
@@ -21,7 +19,7 @@ export const getUsers = (request: IncomingMessage, response: ServerResponse) => 
 };
 
 //route GET /api/users/id
-export const getUser = (request: IncomingMessage, response: ServerResponse, id: string) => {
+export const getUser = (response: ServerResponse, id: string) => {
   try {
     const user = User.findById(id);
 
@@ -54,7 +52,7 @@ export const createUser = async (request: IncomingMessage, response: ServerRespo
   }
 };
 
-//route PUT /api/users
+//route PUT /api/users/id
 export const updateUser = async (
   request: IncomingMessage,
   response: ServerResponse,
@@ -79,6 +77,28 @@ export const updateUser = async (
 
       response.writeHead(STATUS.OK, { 'Content-Type': 'application/json' });
       response.end(JSON.stringify(updateUser));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//route DELETE /api/users/id
+export const deleteUser = (
+  response: ServerResponse,
+  id: string,
+) => {
+  try {
+    const user = User.findById(id);
+
+    if (!user) {
+      response.writeHead(STATUS.NOT_FOUND, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ message: 'User Not Found' }));
+    } else {
+      User.remove(id);
+
+      response.writeHead(STATUS.NO_CONTENT, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ message: 'User deleted' }));
     }
   } catch (error) {
     console.log(error);

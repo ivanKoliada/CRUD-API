@@ -1,5 +1,4 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import { TUserBody } from '../types';
+import { IncomingMessage } from 'http';
 
 export const getPostData = (request: IncomingMessage) => {
   return new Promise<void>((resolve, reject) => {
