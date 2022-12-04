@@ -4,11 +4,11 @@ import { v4 as uuid } from 'uuid';
 
 import { TUser, TUserBody } from '../types';
 
-export const findAll = () => {
+export const getAll = () => {
   return database;
 };
 
-export const findById = (id: string): TUser | undefined => {
+export const getById = (id: string): TUser | undefined => {
   return database.find((item) => item.id === id);
 };
 

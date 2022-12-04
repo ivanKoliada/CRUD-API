@@ -1,7 +1,7 @@
 import http from 'http';
 
-import { PORT } from './constants';
 import { serviceController } from './services';
+import { PORT } from './constants';
 
 export const init = () => {
   const server = http.createServer(serviceController);

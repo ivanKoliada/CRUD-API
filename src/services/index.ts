@@ -2,23 +2,37 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import * as User from '../models';
 import { getUsers, getUser, createUser, updateUser, deleteUser } from '../controllers';
-import { validateUrl } from '../utils';
-import { ENDPOINT, METHODS } from '../constants';
+import { sendResponse, getId, validateUrl, validateEndpoint } from '../helpers';
 import { STATUS } from '../types';
-import { sendResponse } from '../helpers';
+import { METHODS } from '../constants';
 
 export const serviceController = async (request: IncomingMessage, response: ServerResponse) => {
+  const isEndpointValid = validateEndpoint(request);
   const isUrlValid = validateUrl(request);
-  const id = request.url?.split('/')[3] as string;
-  const user = User.findById(id);
+  const id = getId(request);
+  // const user = User.getById(id);
 
-  if (!user) {
-    sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
-  } else if (request.url === ENDPOINT && request.method === METHODS.GET) {
+  // if (!user) {
+  //   sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
+  // } else if (isEndpointValid && request.method === METHODS.GET) {
+  //   getUsers(response);
+  // } else if (isUrlValid && request.method === METHODS.GET) {
+  //   getUser(response, id);
+  // } else if (isEndpointValid && request.method === METHODS.POST) {
+  //   createUser(request, response);
+  // } else if (isUrlValid && request.method === METHODS.PUT) {
+  //   updateUser(request, response, id);
+  // } else if (isUrlValid && request.method === METHODS.DELETE) {
+  //   deleteUser(response, id);
+  // } else {
+  //   sendResponse(response, STATUS.BAD_REQUEST, { message: 'Incorrect url' });
+  // }
+
+  if (isEndpointValid && request.method === METHODS.GET) {
     getUsers(response);
   } else if (isUrlValid && request.method === METHODS.GET) {
     getUser(response, id);
-  } else if (request.url === ENDPOINT && request.method === METHODS.POST) {
+  } else if (isEndpointValid && request.method === METHODS.POST) {
     createUser(request, response);
   } else if (isUrlValid && request.method === METHODS.PUT) {
     updateUser(request, response, id);

@@ -1,14 +1,14 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
 import * as User from '../models';
+import { sendResponse } from '../helpers';
 import { getPostData } from '../utils';
 import { STATUS, TUser } from '../types';
-import { sendResponse } from '../helpers';
 
 //route GET /api/users
 export const getUsers = (response: ServerResponse) => {
   try {
-    const users = User.findAll();
+    const users = User.getAll();
 
     sendResponse(response, STATUS.OK, users);
   } catch (error) {
@@ -19,9 +19,13 @@ export const getUsers = (response: ServerResponse) => {
 //route GET /api/users/id
 export const getUser = (response: ServerResponse, id: string) => {
   try {
-    const user = User.findById(id) as TUser;
+    const user = User.getById(id) as TUser;
 
-    sendResponse(response, STATUS.OK, user);
+    if (!user) {
+      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
+    } else {
+      sendResponse(response, STATUS.OK, user);
+    }
   } catch (error) {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
@@ -46,18 +50,23 @@ export const updateUser = async (
   id: string,
 ) => {
   try {
-    const user = User.findById(id);
-    const { username, age, hobbies } = (await getPostData(request)) as any;
+    const user = User.getById(id);
 
-    const userData = {
-      username: username || user?.username,
-      age: age || user?.age,
-      hobbies: hobbies || user?.hobbies,
-    };
+    if (!user) {
+      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
+    } else {
+      const { username, age, hobbies } = (await getPostData(request)) as any;
 
-    const updateUser = User.update(id, userData);
+      const userData = {
+        username: username || user?.username,
+        age: age || user?.age,
+        hobbies: hobbies || user?.hobbies,
+      };
 
-    sendResponse(response, STATUS.OK, updateUser);
+      const updateUser = User.update(id, userData);
+
+      sendResponse(response, STATUS.OK, updateUser);
+    }
   } catch (error) {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
@@ -66,9 +75,15 @@ export const updateUser = async (
 //route DELETE /api/users/id
 export const deleteUser = (response: ServerResponse, id: string) => {
   try {
-    User.remove(id);
+    const user = User.getById(id);
 
-    sendResponse(response, STATUS.NO_CONTENT, { message: 'User deleted' });
+    if (!user) {
+      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
+    } else {
+      User.remove(id);
+
+      sendResponse(response, STATUS.NO_CONTENT, { message: 'User deleted' });
+    }
   } catch (error) {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
   }
