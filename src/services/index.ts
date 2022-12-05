@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import { validate } from 'uuid';
 
 import * as User from '../models';
 import { getUsers, getUser, createUser, updateUser, deleteUser } from '../controllers';
@@ -16,7 +17,7 @@ export const serviceController = async (request: IncomingMessage, response: Serv
   const id = getId(request);
   const user = User.getById(id);
 
-  if (id && !user) {
+  if (validate(id) && !user) {
     sendResponse(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);
   } else if (isEndpointValid && request.method === METHODS.GET) {
     getUsers(response);

@@ -14,7 +14,7 @@ export const METHODS = {
 export const REQUIRED_FIELDS = { USERNAME: 'username', AGE: 'age', HOBBIES: 'hobbies' };
 
 export const MSG = {
-  INCORRECT_URL: { message: 'Incorrect url' },
+  INCORRECT_URL: { message: 'Incorrect url or id' },
   USER_NOT_FOUND: { message: 'User Not Found' },
   INTERNAL_SERVER_ERROR: { message: 'Internal Server Error' },
   INCORRECT_FIELDS: { message: 'Incorrect fields or types' },
