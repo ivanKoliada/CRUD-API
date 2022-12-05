@@ -9,4 +9,6 @@ export const init = () => {
   server.listen(PORT, () => {
     console.log(`Server started on ${PORT}`);
   });
+
+  return server;
 };
