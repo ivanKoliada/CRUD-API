@@ -10,26 +10,31 @@ import { STATUS } from '../types';
 export const serviceController = async (request: IncomingMessage, response: ServerResponse) => {
   request.on('error', () => {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
-  })
-  
+  });
+
   const isEndpointValid = validateEndpoint(request);
   const isUrlValid = validateUrl(request);
   const id = getId(request);
   const user = User.getById(id);
 
   if (validate(id) && !user) {
-    sendResponse(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);
-  } else if (isEndpointValid && request.method === METHODS.GET) {
-    getUsers(response);
-  } else if (isUrlValid && request.method === METHODS.GET) {
-    getUser(response, id);
-  } else if (isEndpointValid && request.method === METHODS.POST) {
-    createUser(request, response);
-  } else if (isUrlValid && request.method === METHODS.PUT) {
-    updateUser(request, response, id);
-  } else if (isUrlValid && request.method === METHODS.DELETE) {
-    deleteUser(response, id);
-  } else {
-    sendResponse(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
+    return sendResponse(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);
   }
+  if (isEndpointValid && request.method === METHODS.GET) {
+    return getUsers(response);
+  }
+  if (isUrlValid && request.method === METHODS.GET) {
+    return getUser(response, id);
+  }
+  if (isEndpointValid && request.method === METHODS.POST) {
+    return createUser(request, response);
+  }
+  if (isUrlValid && request.method === METHODS.PUT) {
+    return updateUser(request, response, id);
+  }
+  if (isUrlValid && request.method === METHODS.DELETE) {
+    return deleteUser(response, id);
+  }
+
+  return sendResponse(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
 };

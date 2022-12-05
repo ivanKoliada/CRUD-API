@@ -16,7 +16,7 @@ export const REQUIRED_FIELDS = { USERNAME: 'username', AGE: 'age', HOBBIES: 'hob
 export const MSG = {
   INCORRECT_URL: { message: 'Incorrect url or id' },
   USER_NOT_FOUND: { message: 'User Not Found' },
-  INTERNAL_SERVER_ERROR: { message: 'Internal Server Error' },
+  INTERNAL_SERVER_ERROR: { message: 'Error on the server side' },
   INCORRECT_FIELDS: { message: 'Incorrect fields or types' },
   USER_DELETED: { message: 'User was successfully deleted' },
 };
