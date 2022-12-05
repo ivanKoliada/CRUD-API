@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { TUser, TUserBody } from '../types';
 
-export const getAll = () => {
+export const getAll = () => {  
   return database;
 };
 
@@ -26,7 +26,7 @@ export const update = (id: string, user: TUserBody) => {
   return database[index];
 };
 
-export const remove = (id: string) => {
+export const remove = (id: string) => {  
   const index = database.findIndex((item) => item.id === id);
 
   database.splice(index, 1);

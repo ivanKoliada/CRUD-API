@@ -1,5 +1,5 @@
 import http from 'http';
 
-import { serviceController } from '../services';
+import { routes } from '../routes';
 
-export const server = http.createServer(serviceController);
+export const server = http.createServer(routes);

@@ -1,10 +1,10 @@
 import http from 'http';
 
-import { serviceController } from './services';
+import { routes } from './routes';
 import { PORT } from './constants';
 
 export const init = () => {
-  const server = http.createServer(serviceController);
+  const server = http.createServer(routes);
 
   server.listen(PORT, () => {
     console.log(`Server started on ${PORT}`);
