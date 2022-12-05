@@ -10,5 +10,9 @@ export const init = () => {
     console.log(`Server started on ${PORT}`);
   });
 
+  process.on('SIGINT', () => {
+    server.close(() => process.disconnect());
+  });
+
   return server;
 };
