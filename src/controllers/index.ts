@@ -2,7 +2,8 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import * as User from '../models';
 import { sendResponse } from '../helpers';
-import { getPostData } from '../utils';
+import { getPostData, validateBody } from '../utils';
+import { MSG } from '../constants';
 import { STATUS, TUser } from '../types';
 
 //route GET /api/users
@@ -12,7 +13,7 @@ export const getUsers = (response: ServerResponse) => {
 
     sendResponse(response, STATUS.OK, users);
   } catch (error) {
-    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -20,26 +21,25 @@ export const getUsers = (response: ServerResponse) => {
 export const getUser = (response: ServerResponse, id: string) => {
   try {
     const user = User.getById(id) as TUser;
-
-    if (!user) {
-      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
-    } else {
-      sendResponse(response, STATUS.OK, user);
-    }
+    sendResponse(response, STATUS.OK, user);
   } catch (error) {
-    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };
 
 //route POST /api/users
 export const createUser = async (request: IncomingMessage, response: ServerResponse) => {
   try {
-    const body = (await getPostData(request)) as any;
+    const body = await getPostData(request, response);
+
+    if (!validateBody(body) || Object.keys(body).length !== 3) {
+      return sendResponse(response, STATUS.BAD_REQUEST, MSG.INCORRECT_FIELDS);
+    }
     const newUser = User.create(body);
 
     sendResponse(response, STATUS.CREATED, newUser);
   } catch (error) {
-    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -50,41 +50,34 @@ export const updateUser = async (
   id: string,
 ) => {
   try {
-    const user = User.getById(id);
+    const user = User.getById(id) as TUser;
+    const data = await getPostData(request, response);
 
-    if (!user) {
-      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
-    } else {
-      const { username, age, hobbies } = (await getPostData(request)) as any;
-
-      const userData = {
-        username: username || user?.username,
-        age: age || user?.age,
-        hobbies: hobbies || user?.hobbies,
-      };
-
-      const updateUser = User.update(id, userData);
-
-      sendResponse(response, STATUS.OK, updateUser);
+    if (!validateBody(data)) {
+      return sendResponse(response, STATUS.BAD_REQUEST, MSG.INCORRECT_FIELDS);
     }
+
+    const { username, age, hobbies } = data;
+    const userData = {
+      username: username || user?.username,
+      age: age || user?.age,
+      hobbies: hobbies || user?.hobbies,
+    };
+
+    const updateUser = User.update(id, userData);
+    sendResponse(response, STATUS.OK, updateUser);
   } catch (error) {
-    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };
 
 //route DELETE /api/users/id
 export const deleteUser = (response: ServerResponse, id: string) => {
   try {
-    const user = User.getById(id);
+    User.remove(id);
 
-    if (!user) {
-      sendResponse(response, STATUS.NOT_FOUND, { message: 'User Not Found' });
-    } else {
-      User.remove(id);
-
-      sendResponse(response, STATUS.NO_CONTENT, { message: 'User deleted' });
-    }
+    sendResponse(response, STATUS.NO_CONTENT, MSG.USER_DELETED);
   } catch (error) {
-    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, { message: 'Internal Server Error' });
+    sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };

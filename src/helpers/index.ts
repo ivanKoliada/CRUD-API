@@ -26,5 +26,3 @@ export const sendResponse = (
   });
   response.end(JSON.stringify(body));
 };
-
-// /^\/api\/users\/?$/.test('/api/users/');
