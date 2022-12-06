@@ -4,6 +4,8 @@ dotenv.config();
 
 export const PORT = process.env.PORT || 8080;
 
+export const PATH_TO_DB = process.env.DB_PATH || '';
+
 export const METHODS = {
   GET: 'GET',
   POST: 'POST',

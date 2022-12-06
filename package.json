@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
-  "type": "commonjs",
   "scripts": {
-    "start:prod": "webpack && node ./dist/bundle.js",
-    "start:dev": "nodemon ./src/index.ts",
-    "test": "jest"
+    "start:prod": "cross-env DB_PATH=DB.json webpack && node ./dist/bundle.js",
+    "start:dev": "cross-env DB_PATH=DB.json nodemon ./src/index.ts",
+    "test": "cross-env DB_PATH=mockDB.json jest"
   },
   "repository": {
     "type": "git",
@@ -40,6 +39,7 @@
     "webpack-cli": "^5.0.0"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "uuid": "^9.0.0"
   }

@@ -1,6 +1,12 @@
 import { v4 as uuid } from 'uuid';
+import * as url from 'url';
+import { createReadStream, createWriteStream } from 'fs';
+import * as path from 'path';
 
 import { TUser } from '../types';
+import { PATH_TO_DB } from '../constants';
+
+const pathToFile = path.join(__dirname, PATH_TO_DB);
 
 export const database: TUser[] = [
   {
@@ -40,3 +46,23 @@ export const database: TUser[] = [
     hobbies: ['origami'],
   },
 ];
+
+export const readDatabase = async (): Promise<TUser[]> => {
+  const readableStream = createReadStream(pathToFile, );
+  let data = '';
+
+  return new Promise((resolve, reject) => {
+    readableStream.on('readable', () => {
+      try {
+        const chunk = readableStream.read();
+        if (chunk) {
+          data += chunk;
+        }
+        const result = JSON.parse(data);
+        resolve(result);
+      } catch (error) {
+        reject('добавить респонс');
+      }
+    });
+  });
+};

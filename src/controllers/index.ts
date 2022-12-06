@@ -7,12 +7,13 @@ import { MSG } from '../constants';
 import { STATUS, TUser } from '../types';
 
 //route GET /api/users
-export const getUsers = (response: ServerResponse) => {
+export const getUsers = async(response: ServerResponse) => {
   try {
-    const users = User.getAll();
+    const users = await User.getAll();
 
     sendResponse(response, STATUS.OK, users);
   } catch (error) {
+    if(error instanceof SyntaxError) console.log('1234545', error)
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };

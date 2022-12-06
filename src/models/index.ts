@@ -3,9 +3,11 @@ import { database } from '../database';
 import { v4 as uuid } from 'uuid';
 
 import { TUser, TUserBody } from '../types';
+import { readDatabase } from '../database';
 
-export const getAll = () => {  
-  return database;
+export const getAll = async () => {  
+  const db = await readDatabase();
+  return db;
 };
 
 export const getById = (id: string): TUser | undefined => {
