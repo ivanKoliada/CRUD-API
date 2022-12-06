@@ -12,7 +12,7 @@ export const routes = async (request: IncomingMessage, response: ServerResponse)
     const isEndpointValid = validateEndpoint(request);
     const isUrlValid = validateUrl(request);
     const id = getId(request);
-    const user = User.getById(id);
+    const user = await User.getById(id);
 
     if (validate(id) && !user) {
       return sendResponse(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);

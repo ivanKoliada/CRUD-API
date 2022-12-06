@@ -43,33 +43,3 @@ const validateBodyByField = (key: string, value: TUserBody[keyof TUserBody]) => 
   return false;
 };
 
-
-// import * as url from 'url';
-// import { createReadStream } from 'fs';
-// import * as path from 'path';
-
-// const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-// const pathToFile = path.join(__dirname, 'files', 'fileToRead.txt');
-// const readableStream = createReadStream(pathToFile, 'utf8');
-
-// export const read = async () => {
-//   readableStream.pipe(process.stdout);
-// };
-
-// read();
-
-// export const hashHandler = async (path) => {
-//   try {
-//     const [filePathArg] = parseArgs(path);
-//     const filePath = resolve(process.env.APP_CUR_DIRECTORY, filePathArg);
-//     const readable = createReadStream(filePath);
-//     const hash = createHash('sha256');
-//     handleStreamError(readable);
-//     readable.on('readable', () => {
-//       const chunk = readable.read();
-//       chunk ? hash.update(chunk) : console.log(hash.digest('hex'));
-//     });
-//   } catch {
-//     logOperationError();
-//   }
-// };

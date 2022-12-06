@@ -13,15 +13,14 @@ export const getUsers = async(response: ServerResponse) => {
 
     sendResponse(response, STATUS.OK, users);
   } catch (error) {
-    if(error instanceof SyntaxError) console.log('1234545', error)
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }
 };
 
 //route GET /api/users/id
-export const getUser = (response: ServerResponse, id: string) => {
+export const getUser = async (response: ServerResponse, id: string) => {
   try {
-    const user = User.getById(id) as TUser;
+    const user = await User.getById(id) as TUser;
     sendResponse(response, STATUS.OK, user);
   } catch (error) {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
@@ -36,7 +35,7 @@ export const createUser = async (request: IncomingMessage, response: ServerRespo
     if (!validateBody(body) || Object.keys(body).length !== 3) {
       return sendResponse(response, STATUS.BAD_REQUEST, MSG.INCORRECT_FIELDS);
     }
-    const newUser = User.create(body);
+    const newUser = await User.create(body);
 
     sendResponse(response, STATUS.CREATED, newUser);
   } catch (error) {
@@ -51,7 +50,7 @@ export const updateUser = async (
   id: string,
 ) => {
   try {
-    const user = User.getById(id) as TUser;
+    const user = await User.getById(id) as TUser;
     const data = await getPostData(request, response);
 
     if (!validateBody(data)) {
@@ -65,7 +64,7 @@ export const updateUser = async (
       hobbies: hobbies || user?.hobbies,
     };
 
-    const updateUser = User.update(id, userData);
+    const updateUser = await User.update(id, userData);
     sendResponse(response, STATUS.OK, updateUser);
   } catch (error) {
     sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
@@ -73,9 +72,9 @@ export const updateUser = async (
 };
 
 //route DELETE /api/users/id
-export const deleteUser = (response: ServerResponse, id: string) => {
+export const deleteUser = async (response: ServerResponse, id: string) => {
   try {
-    User.remove(id);
+    await User.remove(id);
 
     sendResponse(response, STATUS.NO_CONTENT, MSG.USER_DELETED);
   } catch (error) {

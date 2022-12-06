@@ -1,9 +1,12 @@
-import { database } from '../database';
+import { readDatabase } from '../database';
+
+import { DEFAULT_DB  as database} from '../constants';
 
 import request from 'supertest';
 
 import { server } from './';
 import { TUser } from '../types';
+
 
 describe('scenario one', () => {
   it('should get all users', async () => {

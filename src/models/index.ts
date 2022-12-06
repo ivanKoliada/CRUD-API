@@ -1,35 +1,47 @@
-import { database } from '../database';
+import { writeDatabase } from '../database';
 
 import { v4 as uuid } from 'uuid';
 
 import { TUser, TUserBody } from '../types';
 import { readDatabase } from '../database';
 
-export const getAll = async () => {  
+export const getAll = async () => {
   const db = await readDatabase();
   return db;
 };
 
-export const getById = (id: string): TUser | undefined => {
-  return database.find((item) => item.id === id);
+export const getById = async (id: string) => {
+  const db = await readDatabase();
+
+  return db.find((item) => item.id === id);
 };
 
-export const create = (user: TUserBody) => {
+export const create = async (user: TUserBody) => {
   const newUser = { id: uuid(), ...user };
+  const db = await readDatabase();
 
-  database.push(newUser);
+  db.push(newUser);
+
+  writeDatabase(db);
+
   return newUser;
 };
 
-export const update = (id: string, user: TUserBody) => {
-  const index = database.findIndex((item) => item.id === id);
-  database[index] = { id, ...user };
+export const update = async (id: string, user: TUserBody) => {
+  const db = await readDatabase();
+  const index = db.findIndex((item) => item.id === id);
+  db[index] = { id, ...user };
 
-  return database[index];
+  await writeDatabase(db);
+
+  return db[index];
 };
 
-export const remove = (id: string) => {  
-  const index = database.findIndex((item) => item.id === id);
+export const remove = async (id: string) => {
+  const db = await readDatabase();
+  const index = db.findIndex((item) => item.id === id);
 
-  database.splice(index, 1);
+  db.splice(index, 1);
+
+  await writeDatabase(db);
 };

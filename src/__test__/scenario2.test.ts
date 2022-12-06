@@ -1,8 +1,10 @@
 import request from 'supertest';
 
+import { DEFAULT_DB as database } from '../constants';
+
 import { server } from '.';
 import { MSG } from '../constants';
-import { database } from '../database';
+import { readDatabase } from '../database';
 import { TUser } from '../types';
 
 describe('scenario two', () => {

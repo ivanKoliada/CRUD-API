@@ -1,4 +1,6 @@
-import { database } from '../database';
+import { readDatabase } from '../database';
+
+import { DEFAULT_DB as database } from '../constants';
 
 import request from 'supertest';
 
