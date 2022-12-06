@@ -16,6 +16,10 @@ export enum STATUS {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type TMessage = {
-  message: string;
+export enum MSG {
+  INCORRECT_URL = 'Incorrect url or id',
+  USER_NOT_FOUND = 'User Not Found',
+  INTERNAL_SERVER_ERROR = 'Error on the server side',
+  INCORRECT_FIELDS = 'Incorrect fields or types',
+  USER_DELETED=  'User was successfully deleted',
 };

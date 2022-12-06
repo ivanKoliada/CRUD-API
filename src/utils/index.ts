@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { sendResponse } from '../helpers';
-import { REQUIRED_FIELDS, MSG } from '../constants';
-import { STATUS, TUserBody } from '../types';
+import { sendResponseMessage } from '../helpers';
+import { REQUIRED_FIELDS } from '../constants';
+import { MSG, STATUS, TUserBody } from '../types';
 
 export const getPostData = (request: IncomingMessage, response: ServerResponse) => {
   return new Promise<TUserBody>((resolve, reject) => {
@@ -16,7 +16,9 @@ export const getPostData = (request: IncomingMessage, response: ServerResponse) 
         const data = JSON.parse(body);
         resolve(data);
       } catch (error) {
-        reject(sendResponse(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR));
+        reject(
+          sendResponseMessage(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR),
+        );
       }
     });
   });
@@ -42,4 +44,3 @@ const validateBodyByField = (key: string, value: TUserBody[keyof TUserBody]) => 
   }
   return false;
 };
-

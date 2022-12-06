@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { STATUS, TMessage, TUser } from '../types';
+import { MSG, STATUS, TUser } from '../types';
 
 export const getId = (request: IncomingMessage) => {
   return request.url?.split('/')[3] as string;
@@ -16,13 +16,20 @@ export const validateUrl = (request: IncomingMessage) => {
   );
 };
 
-export const sendResponse = (
+export const sendResponseBody = (
   response: ServerResponse,
   status: STATUS,
-  body: TUser[] | TUser | TMessage,
+  body: TUser[] | TUser,
 ) => {
   response.writeHead(status, {
     'content-type': 'application/json',
   });
   response.end(JSON.stringify(body));
+};
+
+export const sendResponseMessage = (response: ServerResponse, status: STATUS, message: MSG) => {
+  response.writeHead(status, {
+    'content-type': 'application/json',
+  });
+  response.end(JSON.stringify({ code: response.statusCode, message }));
 };
