@@ -5,8 +5,7 @@ import { DEFAULT_DB as database } from '../constants';
 import request from 'supertest';
 
 import { server } from '.';
-import { MSG } from '../constants';
-import { TUser } from '../types';
+import { TUser, MSG } from '../types';
 
 describe('scenario three', () => {
   it('should get user', async () => {
@@ -30,7 +29,7 @@ describe('scenario three', () => {
     const { statusCode, text } = await request(server).put(`/api/users/${userId}`).send(updateUser);
 
     expect(statusCode).toBe(400);
-    expect(text).toMatch(MSG.INCORRECT_FIELDS.message);
+    expect(text).toMatch(MSG.INCORRECT_FIELDS);
   });
 
   it('should get updated user', async () => {
@@ -63,6 +62,6 @@ describe('scenario three', () => {
     const { statusCode, text } = await request(server).get('/api/allUsers');
 
     expect(statusCode).toEqual(400);
-    expect(text).toMatch(MSG.INCORRECT_URL.message);
+    expect(text).toMatch(MSG.INCORRECT_URL);
   });
 });

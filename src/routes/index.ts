@@ -20,9 +20,12 @@ export const routes = async (request: IncomingMessage, response: ServerResponse)
     const id = getId(request);
     const user = await User.getById(id);
 
-    if (validate(id) && !user) {
-      return sendResponseMessage(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);
+    if (!isEndpointValid) {
+      return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_ID);
     }
+      if (validate(id) && !user) {
+        return sendResponseMessage(response, STATUS.NOT_FOUND, MSG.USER_NOT_FOUND);
+      }
     if (isEndpointValid && request.method === METHODS.GET) {
       return getUsers(response);
     }

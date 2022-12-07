@@ -3,9 +3,8 @@ import request from 'supertest';
 import { DEFAULT_DB as database } from '../constants';
 
 import { server } from '.';
-import { MSG } from '../constants';
 import { readDatabase } from '../database';
-import { TUser } from '../types';
+import { TUser, MSG } from '../types';
 
 describe('scenario two', () => {
   let deletedUser = '';
@@ -14,7 +13,7 @@ describe('scenario two', () => {
     const { statusCode, text } = await request(server).get(`/api/users/non-uuid`);
 
     expect(statusCode).toEqual(400);
-    expect(text).toMatch(MSG.INCORRECT_URL.message);
+    expect(text).toMatch(MSG.INCORRECT_ID);
   });
 
   it('should get deleted user', async () => {
@@ -38,7 +37,7 @@ describe('scenario two', () => {
     const { statusCode, text } = await request(server).get(`/api/users/${deletedUser}`);
 
     expect(statusCode).toEqual(404);
-    expect(text).toMatch(MSG.USER_NOT_FOUND.message);
+    expect(text).toMatch(MSG.USER_NOT_FOUND);
   });
 
   it('should not create new user', async () => {
@@ -50,6 +49,6 @@ describe('scenario two', () => {
     const { statusCode, text } = await request(server).post(`/api/users`).send(newUser);
 
     expect(statusCode).toBe(400);
-    expect(text).toMatch(MSG.INCORRECT_FIELDS.message);
+    expect(text).toMatch(MSG.INCORRECT_FIELDS);
   });
 });
