@@ -1,12 +1,12 @@
+import { readDatabase, writeDatabase } from '../database';
+
 import request from 'supertest';
 
 import { server } from '.';
-import { readDatabase, restoreDatabase, writeDatabase } from '../database';
 import { TUser, MSG } from '../types';
 
 let initialDatabase = [] as TUser[];
 let database = [] as TUser[];
-let deletedUser = '';
 
 describe('scenario two', () => {
   beforeAll(async () => {
@@ -15,11 +15,10 @@ describe('scenario two', () => {
   });
 
   afterAll(async () => {
-    // await writeDatabase(initialDatabase);
-    await restoreDatabase();
+    await writeDatabase(initialDatabase);
   });  
 
-  it('should not get user by non-uuid id', async () => {
+  it('should get incorrect id', async () => {
     const { statusCode, text } = await request(server).get(`/api/users/non-uuid`);
 
     expect(statusCode).toEqual(400);
@@ -27,30 +26,34 @@ describe('scenario two', () => {
   });
 
   it('should get deleted user', async () => {
-    const userId = (database[0] as TUser).id;
+    const userId = (database.at(-1) as TUser).id;
 
-    deletedUser = userId;
-    const { statusCode, ok } = await request(server).delete(`/api/users/${userId}`);
+    const { statusCode, noContent } = await request(server).delete(`/api/users/${userId}`);
+
+    database = database.filter(item => item.id !== userId)
 
     expect(statusCode).toBe(204);
-    expect(ok).toBeTruthy();
+    expect(noContent).toBeTruthy();
   });
 
   it('should get all users', async () => {
-    const { statusCode, ok } = await request(server).get('/api/users');
+    const { statusCode, body } = await request(server).get('/api/users');
 
     expect(statusCode).toEqual(200);
-    expect(ok).toBeTruthy();
+    expect(body).toEqual(database);
   });
 
-  it('should not get deleted user', async () => {
-    const { statusCode, text } = await request(server).get(`/api/users/${deletedUser}`);
+  it('should get user not found', async () => {
+    const userId = (database[0] as TUser).id;    
+    await request(server).delete(`/api/users/${userId}`);
+
+    const { statusCode, text } = await request(server).get(`/api/users/${userId}`);
 
     expect(statusCode).toEqual(404);
     expect(text).toMatch(MSG.USER_NOT_FOUND);
   });
 
-  it('should not create new user', async () => {
+  it('should get incorrect required fields', async () => {
     const newUser = {
       username: 'Charley',
       hobbies: ['Reading books'],
@@ -60,5 +63,12 @@ describe('scenario two', () => {
 
     expect(statusCode).toBe(400);
     expect(text).toMatch(MSG.INCORRECT_FIELDS);
+  });
+
+  it('should get incorrect url', async () => {
+    const { statusCode, text } = await request(server).get(`/api/imusers`);
+
+    expect(statusCode).toBe(400);
+    expect(text).toMatch(MSG.INCORRECT_URL);
   });
 });

@@ -21,6 +21,6 @@ export enum MSG {
   INCORRECT_URL = 'Incorrect url',
   USER_NOT_FOUND = 'User Not Found',
   INTERNAL_SERVER_ERROR = 'Error on the server side',
-  INCORRECT_FIELDS = 'Incorrect fields or types',
+  INCORRECT_FIELDS = 'Incorrect required fields',
   USER_DELETED=  'User was successfully deleted',
 };

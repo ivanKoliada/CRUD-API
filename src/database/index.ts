@@ -2,7 +2,7 @@ import { createReadStream, createWriteStream } from 'fs';
 import { join } from 'path';
 
 import { TUser } from '../types';
-import { DB_PATH, DEFAULT_DB } from '../constants';
+import { DB_PATH } from '../constants';
 
 const pathToFile = join(__dirname, DB_PATH);
 
@@ -30,9 +30,4 @@ export const writeDatabase = async (data: TUser[]) => {
   const writableStream = createWriteStream(pathToFile, { flags: 'w+' });
 
   writableStream.write(JSON.stringify(data));
-};
-
-export const restoreDatabase = async () => {
-  const data = JSON.stringify(DEFAULT_DB);
-  createWriteStream(pathToFile, { flags: 'w+' }).write(data);
 };

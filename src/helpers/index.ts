@@ -7,17 +7,6 @@ export const getId = (request: IncomingMessage) => {
   return request.url?.split('/')[3] as string;
 };
 
-// const getRoute = (request: IncomingMessage) => {
-//   const route = request.url as string;
-
-//   const index = route.lastIndexOf('/');
-//   return route.slice(0, index);
-// };
-
-// export const validateRoute = (request: IncomingMessage) => {
-//   return request.url ? /^\/api\/users\/?$/.test(request.url) : null;
-// };
-
 export const validateRoute = (request: IncomingMessage) => {
   return request.url?.match(/\/api\/users\/?.*/);
 };
@@ -27,10 +16,6 @@ export const validateRouteWithId = (request: IncomingMessage) => {
     /\/api\/users\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
   );
 };
-// export const validateRouteWithId = (id:string) => {
-//   return validate(id);
-
-// };
 
 export const sendResponseBody = (
   response: ServerResponse,

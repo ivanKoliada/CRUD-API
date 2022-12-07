@@ -1,5 +1,4 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { validate } from 'uuid';
 
 import * as User from '../models';
 import { getUsers, getUser, createUser, updateUser, deleteUser } from '../controllers';

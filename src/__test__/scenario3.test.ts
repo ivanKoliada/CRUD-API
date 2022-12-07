@@ -1,4 +1,4 @@
-import { readDatabase, restoreDatabase, writeDatabase } from '../database';
+import { readDatabase, writeDatabase } from '../database';
 
 import request from 'supertest';
 
@@ -15,24 +15,23 @@ describe('scenario three', () => {
   });
 
   afterAll(async () => {
-    // await writeDatabase(initialDatabase);
-    await restoreDatabase();
+    await writeDatabase(initialDatabase);
   });
 
   it('should get user', async () => {
     const userId = (database.at(-1) as TUser).id;
-    const { statusCode, ok } = await request(server).get(`/api/users/${userId}`);
+    const user = database.find((item) => item.id === userId);
+    const { statusCode, body } = await request(server).get(`/api/users/${userId}`);
 
     expect(statusCode).toEqual(200);
-    expect(ok).toBeTruthy();
+    expect(body).toEqual(user);
   });
 
-  it('should not get updated user', async () => {
-    const userId = (database[0] as TUser).id;
-    const user = database.find((user) => user.id === userId);
+  it('should get incorrect required fields', async () => {
+    const userId = (database.at(-1) as TUser).id;
     const updateUser = {
-      username: user?.username,
-      age: user?.age,
+      username: 'qwerty',
+      age: 20,
       hobbies: ['blogging'],
       animal: 'dog',
     };
@@ -64,7 +63,7 @@ describe('scenario three', () => {
     expect(body.age).toEqual(50);
   });
 
-  it('should not get deleted user', async () => {
+  it('should get bad request', async () => {
     const userId = (database.at(-10) as TUser)?.id;
     const { badRequest, statusCode } = await request(server).delete(`/api/users/${userId}`);
 
@@ -72,10 +71,21 @@ describe('scenario three', () => {
     expect(badRequest).toBeTruthy();
   });
 
-  it('should not get all users', async () => {
+  it('should get incorrect url', async () => {
     const { statusCode, text } = await request(server).get('/api/allUsers');
 
     expect(statusCode).toEqual(400);
     expect(text).toMatch(MSG.INCORRECT_URL);
+  });
+
+  it('should get incorrect required fields ', async () => {
+    const user = {
+      dream: 'leave belarus',
+    };
+
+    const { statusCode, text } = await request(server).post('/api/users').send(user);
+
+    expect(statusCode).toEqual(400);
+    expect(text).toMatch(MSG.INCORRECT_FIELDS);
   });
 });
