@@ -1,5 +1,4 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { validate } from 'uuid';
 
 import { MSG, STATUS, TUser } from '../types';
 
@@ -8,7 +7,7 @@ export const getId = (request: IncomingMessage) => {
 };
 
 export const validateRoute = (request: IncomingMessage) => {
-  return request.url?.match(/\/api\/users\/?.*/);
+  return request.url?.match(/\/api\/users\/?[\w | -]*?$/);
 };
 
 export const validateRouteWithId = (request: IncomingMessage) => {
