@@ -1,13 +1,23 @@
 import request from 'supertest';
 
-import { DEFAULT_DB as database } from '../constants';
-
 import { server } from '.';
-import { readDatabase } from '../database';
+import { readDatabase, restoreDatabase, writeDatabase } from '../database';
 import { TUser, MSG } from '../types';
 
+let initialDatabase = [] as TUser[];
+let database = [] as TUser[];
+let deletedUser = '';
+
 describe('scenario two', () => {
-  let deletedUser = '';
+  beforeAll(async () => {
+    database = await readDatabase();
+    initialDatabase = [...database];
+  });
+
+  afterAll(async () => {
+    // await writeDatabase(initialDatabase);
+    await restoreDatabase();
+  });  
 
   it('should not get user by non-uuid id', async () => {
     const { statusCode, text } = await request(server).get(`/api/users/non-uuid`);
@@ -17,7 +27,7 @@ describe('scenario two', () => {
   });
 
   it('should get deleted user', async () => {
-    const userId = (database.at(-1) as TUser).id;
+    const userId = (database[0] as TUser).id;
 
     deletedUser = userId;
     const { statusCode, ok } = await request(server).delete(`/api/users/${userId}`);
@@ -27,10 +37,10 @@ describe('scenario two', () => {
   });
 
   it('should get all users', async () => {
-    const { statusCode, body } = await request(server).get('/api/users');
+    const { statusCode, ok } = await request(server).get('/api/users');
 
     expect(statusCode).toEqual(200);
-    expect(body).toHaveLength(5);
+    expect(ok).toBeTruthy();
   });
 
   it('should not get deleted user', async () => {

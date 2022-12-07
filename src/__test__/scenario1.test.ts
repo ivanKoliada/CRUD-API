@@ -1,14 +1,24 @@
-import { readDatabase } from '../database';
-
-import { DEFAULT_DB  as database} from '../constants';
+import { readDatabase, restoreDatabase, writeDatabase } from '../database';
 
 import request from 'supertest';
 
-import { server } from './';
+import { server } from '.';
 import { TUser } from '../types';
 
+let initialDatabase = [] as TUser[];
+let database = [] as TUser[];
 
 describe('scenario one', () => {
+  beforeAll(async () => {
+    database = await readDatabase();
+    initialDatabase = [...database];
+  });
+
+  afterAll(async () => {
+    // await writeDatabase(initialDatabase);
+    await restoreDatabase();
+  });
+
   it('should get all users', async () => {
     const { statusCode, body } = await request(server).get('/api/users');
 
@@ -46,7 +56,7 @@ describe('scenario one', () => {
   });
 
   it('should get updated user', async () => {
-    const userId = (database.at(-1) as TUser).id;
+    const userId = (database[0] as TUser).id;
     const user = database.find((user) => user.id === userId);
     const updateUser = {
       username: user?.username,
