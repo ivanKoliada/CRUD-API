@@ -23,4 +23,4 @@ export enum MSG {
   INTERNAL_SERVER_ERROR = 'Error on the server side',
   INCORRECT_FIELDS = 'Incorrect required fields',
   USER_DELETED = 'User was successfully deleted',
-};
+}

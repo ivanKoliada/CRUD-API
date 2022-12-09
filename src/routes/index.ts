@@ -6,12 +6,12 @@ import { getId, validateRouteWithId, validateRoute, sendResponseMessage } from '
 import { METHODS } from '../constants';
 import { MSG, STATUS } from '../types';
 
-export const routes = async (request: IncomingMessage, response: ServerResponse) => {
+export const routes = (request: IncomingMessage, response: ServerResponse) => {
   try {
     const isRouteValid = validateRoute(request);
     const isRouteWithIdValid = validateRouteWithId(request);
     const id = getId(request);
-    const user = await User.getById(id);
+    const user = User.getById(id);
 
     if (!isRouteValid) {
       return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
@@ -36,7 +36,7 @@ export const routes = async (request: IncomingMessage, response: ServerResponse)
     }
     if (!isRouteWithIdValid) {
       return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_ID);
-    } 
+    }
 
     return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
   } catch (error) {

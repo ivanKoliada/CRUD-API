@@ -6,9 +6,9 @@ import { getPostData, validateBody } from '../utils';
 import { MSG, STATUS, TUser } from '../types';
 
 //route GET /api/users
-export const getUsers = async (response: ServerResponse) => {
+export const getUsers = (response: ServerResponse) => {
   try {
-    const users = await User.getAll();
+    const users = User.getAll();
 
     sendResponseBody(response, STATUS.OK, users);
   } catch (error) {
@@ -17,9 +17,9 @@ export const getUsers = async (response: ServerResponse) => {
 };
 
 //route GET /api/users/id
-export const getUser = async (response: ServerResponse, id: string) => {
+export const getUser = (response: ServerResponse, id: string) => {
   try {
-    const user = (await User.getById(id)) as TUser;
+    const user = (User.getById(id)) as TUser;
     sendResponseBody(response, STATUS.OK, user);
   } catch (error) {
     sendResponseMessage(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
@@ -34,7 +34,7 @@ export const createUser = async (request: IncomingMessage, response: ServerRespo
     if (!validateBody(body) || Object.keys(body).length !== 3) {
       return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_FIELDS);
     }
-    const newUser = await User.create(body);
+    const newUser = User.create(body);
 
     sendResponseBody(response, STATUS.CREATED, newUser);
   } catch (error) {
@@ -49,7 +49,7 @@ export const updateUser = async (
   id: string,
 ) => {
   try {
-    const user = (await User.getById(id)) as TUser;
+    const user = (User.getById(id)) as TUser;
     const data = await getPostData(request, response);
 
     if (!validateBody(data)) {
@@ -63,7 +63,7 @@ export const updateUser = async (
       hobbies: hobbies || user?.hobbies,
     };
 
-    const updateUser = await User.update(id, userData);
+    const updateUser = User.update(id, userData);
     sendResponseBody(response, STATUS.OK, updateUser);
   } catch (error) {
     sendResponseMessage(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
@@ -71,9 +71,9 @@ export const updateUser = async (
 };
 
 //route DELETE /api/users/id
-export const deleteUser = async (response: ServerResponse, id: string) => {
+export const deleteUser = (response: ServerResponse, id: string) => {
   try {
-    await User.remove(id);
+    User.remove(id);
 
     sendResponseMessage(response, STATUS.NO_CONTENT, MSG.USER_DELETED);
   } catch (error) {

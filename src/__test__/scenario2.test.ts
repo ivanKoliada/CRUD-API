@@ -1,23 +1,13 @@
-import { readDatabase, writeDatabase } from '../database';
+import { db} from '../inMemoryDB';
 
 import request from 'supertest';
 
 import { server } from '.';
 import { TUser, MSG } from '../types';
 
-let initialDatabase = [] as TUser[];
-let database = [] as TUser[];
+let database = db.users as TUser[];
 
 describe('scenario two', () => {
-  beforeAll(async () => {
-    database = await readDatabase();
-    initialDatabase = [...database];
-  });
-
-  afterAll(async () => {
-    await writeDatabase(initialDatabase);
-  });  
-
   it('should get incorrect id', async () => {
     const { statusCode, text } = await request(server).get(`/api/users/non-uuid`);
 

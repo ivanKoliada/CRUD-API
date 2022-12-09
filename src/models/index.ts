@@ -1,47 +1,40 @@
-import { writeDatabase } from '../database';
-
 import { v4 as uuid } from 'uuid';
 
-import {  TUserBody } from '../types';
-import { readDatabase } from '../database';
+import { TUserBody } from '../types';
+import { db } from '../inMemoryDB';
 
-export const getAll = async () => {
-  const db = await readDatabase();
-  return db;
+export const getAll = () => {
+  return db.users;
 };
 
-export const getById = async (id: string) => {
-  const db = await readDatabase();
-
-  return db.find((item) => item.id === id);
+export const getById = (id: string) => {
+  return db.users.find((item) => item.id === id);
 };
 
-export const create = async (user: TUserBody) => {
+export const create = (user: TUserBody) => {
   const newUser = { id: uuid(), ...user };
-  const db = await readDatabase();
 
-  db.push(newUser);
+  db.users.push(newUser);
 
-  writeDatabase(db);
+  process.send?.(db.users);
 
   return newUser;
 };
 
-export const update = async (id: string, user: TUserBody) => {
-  const db = await readDatabase();
-  const index = db.findIndex((item) => item.id === id);
-  db[index] = { id, ...user };
+export const update = (id: string, user: TUserBody) => {
+  const index = db.users.findIndex((item) => item.id === id);
 
-  await writeDatabase(db);
+  db.users[index] = { id, ...user };
 
-  return db[index];
+  process.send?.(db.users);
+
+  return db.users[index];
 };
 
-export const remove = async (id: string) => {
-  const db = await readDatabase();
-  const index = db.findIndex((item) => item.id === id);
+export const remove = (id: string) => {
+  const index = db.users.findIndex((item) => item.id === id);
 
-  db.splice(index, 1);
+  db.users.splice(index, 1);
 
-  await writeDatabase(db);
+  process.send?.(db.users);
 };

@@ -1,28 +1,18 @@
-import { readDatabase, writeDatabase } from '../database';
+import { db } from '../inMemoryDB';
 
 import request from 'supertest';
 
 import { server } from '.';
 import { TUser } from '../types';
 
-let initialDatabase = [] as TUser[];
-let database = [] as TUser[];
+let database = db.users as TUser[];
 
 describe('scenario one', () => {
-  beforeAll(async () => {
-    database = await readDatabase();
-    initialDatabase = [...database];
-  });
-
-  afterAll(async () => {
-    await writeDatabase(initialDatabase);
-  });
-
   it('should get all users', async () => {
     const { statusCode, body } = await request(server).get('/api/users');
 
     expect(statusCode).toEqual(200);
-    expect(body).toEqual(database);
+    expect(body).toEqual(db.users);
   });
 
   it('should get user', async () => {

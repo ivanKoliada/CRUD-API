@@ -1,22 +1,13 @@
-import { readDatabase, writeDatabase } from '../database';
+import { db, } from '../inMemoryDB';
 
 import request from 'supertest';
 
 import { server } from '.';
 import { TUser, MSG } from '../types';
 
-let initialDatabase = [] as TUser[];
-let database = [] as TUser[];
+let database = db.users as TUser[];
 
 describe('scenario three', () => {
-  beforeAll(async () => {
-    database = await readDatabase();
-    initialDatabase = [...database];
-  });
-
-  afterAll(async () => {
-    await writeDatabase(initialDatabase);
-  });
 
   it('should get user', async () => {
     const userId = (database.at(-1) as TUser).id;

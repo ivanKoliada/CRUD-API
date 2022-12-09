@@ -3,6 +3,8 @@ import { cpus } from 'os';
 import http from 'http';
 
 import { routes } from './routes';
+import { TUser } from './types';
+import { updateDb } from './inMemoryDB';
 
 if (cluster.isPrimary) {
   const numCPUs = cpus().length;
@@ -10,15 +12,18 @@ if (cluster.isPrimary) {
   console.log(`Master ${process.pid} is running`);
 
   for (let i = 0; i < numCPUs; i++) {
-    cluster.fork({ WORKER_PORT: 4000 + i + 1 });
+    const worker = cluster.fork({ WORKER_PORT: 4000 + i + 1 });
+    worker.on('message', (msg) => {
+      for (const id in cluster.workers) {
+        cluster.workers[id]?.send(msg);
+      }
+    });
   }
-
-  cluster.on('exit', (worker) => {
-    console.log(`worker ${worker.process.pid} died`);
-    console.log('Starting a new worker');
-    cluster.fork();
-  });
 } else {
+  process.on('message', (msg: TUser[]) => {
+    updateDb(msg);
+  });
+
   const PORT = process.env.WORKER_PORT;
   const server = http.createServer(routes);
 
