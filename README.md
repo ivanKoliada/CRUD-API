@@ -22,7 +22,7 @@ To run test use `npm run test`.
 
 ## Dependencies:
 
-**Bootstrap:** webpack, ts-node, cross-env, nodemon
+**Bootstrap:** ts-node, cross-env, nodemon
 
 **Code formatting:** eslint, prettier
 

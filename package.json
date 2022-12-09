@@ -5,9 +5,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start:prod": "tsc && cross-env DB_PATH=DB.json node ./dist/src/index.js",
+    "start:prod": "tsc && cross-env DB_PATH=DB.json node ./dist/index.js",
     "start:dev": "cross-env DB_PATH=DB.json nodemon ./src/index.ts",
-    "start:multi": "cross-env DB_PATH=DB.json ts-node ./src/cluster.ts",
+    "start:multi": "cross-env DB_PATH=multiDB.json ts-node ./src/cluster.ts",
     "test": "cross-env DB_PATH=testDB.json jest"
   },
   "repository": {
@@ -36,9 +36,7 @@
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "cross-env": "^7.0.3",
