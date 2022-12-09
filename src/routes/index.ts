@@ -36,7 +36,9 @@ export const routes = async (request: IncomingMessage, response: ServerResponse)
     }
     if (!isRouteWithIdValid) {
       return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_ID);
-    } else sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
+    } 
+
+    return sendResponseMessage(response, STATUS.BAD_REQUEST, MSG.INCORRECT_URL);
   } catch (error) {
     sendResponseMessage(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
   }

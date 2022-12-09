@@ -7,7 +7,7 @@ export const getId = (request: IncomingMessage) => {
 };
 
 export const validateRoute = (request: IncomingMessage) => {
-  return request.url?.match(/\/api\/users\/?[\w | -]*?$/);
+  return request.url?.match(/\/api\/users(?!\w)\/?[\w | -]*?$/);
 };
 
 export const validateRouteWithId = (request: IncomingMessage) => {
