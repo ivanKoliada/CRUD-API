@@ -1,10 +1,11 @@
+
 {
   "name": "simple-crud-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start:prod": "cross-env DB_PATH=DB.json webpack && node ./dist/bundle.js",
+    "start:prod": "tsc && cross-env DB_PATH=DB.json node ./dist/src/index.js",
     "start:dev": "cross-env DB_PATH=DB.json nodemon ./src/index.ts",
     "start:multi": "cross-env DB_PATH=DB.json ts-node ./src/cluster.ts",
     "test": "cross-env DB_PATH=testDB.json jest"

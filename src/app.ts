@@ -11,7 +11,7 @@ export const init = () => {
   });
 
   process.on('SIGINT', () => {
-    server.close(() => process.disconnect());
+    server.close();
   });
 
   return server;
