@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import * as User from '../models';
+import * as User from '../services';
 import { sendResponseBody, sendResponseMessage } from '../helpers';
 import { getPostData, validateBody } from '../utils';
 import { MSG, STATUS, TUser } from '../types';
@@ -19,7 +19,7 @@ export const getUsers = (response: ServerResponse) => {
 //route GET /api/users/id
 export const getUser = (response: ServerResponse, id: string) => {
   try {
-    const user = (User.getById(id)) as TUser;
+    const user = User.getById(id) as TUser;
     sendResponseBody(response, STATUS.OK, user);
   } catch (error) {
     sendResponseMessage(response, STATUS.INTERNAL_SERVER_ERROR, MSG.INTERNAL_SERVER_ERROR);
@@ -49,7 +49,7 @@ export const updateUser = async (
   id: string,
 ) => {
   try {
-    const user = (User.getById(id)) as TUser;
+    const user = User.getById(id) as TUser;
     const data = await getPostData(request, response);
 
     if (!validateBody(data)) {

@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-import * as User from '../models';
+import * as User from '../services';
 import { getUsers, getUser, createUser, updateUser, deleteUser } from '../controllers';
 import { getId, validateRouteWithId, validateRoute, sendResponseMessage } from '../helpers';
 import { METHODS } from '../constants';
