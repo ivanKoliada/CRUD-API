@@ -16,7 +16,7 @@ To start application in development mode run command `npm run start:dev`.
 
 To start application in production mode run command `npm run start:prod`. 
 
-Run `npm run multi` to starts multiple instances of your application using the Node.js Cluster API.
+Run `npm run start:multi` to starts multiple instances of your application using the Node.js Cluster API.
 
 In memory database `sharing between app instances`.
 
