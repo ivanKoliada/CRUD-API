@@ -58,7 +58,7 @@ describe('scenario two', () => {
   it('should get incorrect url', async () => {
     const { statusCode, text } = await request(server).get(`/api/imusers`);
 
-    expect(statusCode).toBe(400);
+    expect(statusCode).toBe(404);
     expect(text).toMatch(MSG.INCORRECT_URL);
   });
 });

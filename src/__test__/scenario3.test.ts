@@ -65,7 +65,7 @@ describe('scenario three', () => {
   it('should get incorrect url', async () => {
     const { statusCode, text } = await request(server).get('/api/allUsers');
 
-    expect(statusCode).toEqual(400);
+    expect(statusCode).toEqual(404);
     expect(text).toMatch(MSG.INCORRECT_URL);
   });
 
